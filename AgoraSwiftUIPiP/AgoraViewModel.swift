@@ -12,7 +12,6 @@ import AVFoundation
 
 class AgoraViewModel: NSObject, ObservableObject {
     
-    
     // MARK: AGORA PROPERTIES
     final var agoraKit: AgoraRtcEngineKit = AgoraRtcEngineKit()
     final var agoraAppID = ""
@@ -21,12 +20,19 @@ class AgoraViewModel: NSObject, ObservableObject {
     @Published var remoteUIDs: [UInt] = []
         
 //    // CUSTOM RENDERING VIEWS
-//    var localCustomRenderView: PixelBufferRenderView? // For custom render
-//    var remoteCustomRenderView: PixelBufferRenderView? // for custom render 
+//    var localCustomRenderView: CustomPixelBufferRenderView? // For custom render
+//    var remoteCustomRenderView: PixelBufferRenderView? // for custom render
     
-    // SDK RENDERING VIEWS
-    var localSDKRenderView: UIView?
-    var remoteSDKRenderView: UIView? // FOr SDK RENDER
+//    // SDK RENDERING VIEWS
+//    var localSDKRenderView: UIView?
+//    var localSDKRenderView: CustomVideoSourcePreview = CustomVideoSourcePreview()
+//    var remoteSDKRenderView: UIView? // FOr SDK RENDER
+    
+    // Custom Camera Capture & Render
+    var localCustomRenderView: CustomPixelBufferRenderView? // For custom render
+    var customCameraCapture: AgoraCameraSourcePush?
+    var customTrackId: UInt32?
+
     
     // MARK: APPLE PiP PROPERTIES
     private var videoCallController: AVPictureInPictureVideoCallViewController?
@@ -42,9 +48,12 @@ class AgoraViewModel: NSObject, ObservableObject {
         agoraKit.setChannelProfile(.liveBroadcasting)
         agoraKit.setClientRole(.broadcaster)
 //        agoraKit.setVideoFrameDelegate(self) // IMPORTANT: Agora Setup Raw Video Delegate
-        agoraKit.enableVideo()
+//        agoraKit.disableVideo()
+//        agoraKit.disableAudio()
         
-        agoraKit.setParameters("{\"engine.video.enable_hw_decoder\":true}") // enable hardware decoding
+//        agoraKit.setParameters("{\"engine.video.enable_hw_decoder\":true}") // enable hardware decoding
+//        agoraKit.setParameters("{\"che.video.enable_bg_hw_decodec\":true}") // enable hardware decoding
+        
 
     }
     func agoraJoinChannel(channelName: String) async throws {
@@ -55,28 +64,31 @@ class AgoraViewModel: NSObject, ObservableObject {
         agoraKit.leaveChannel()
     }
     
-    
-    func SetupAgoraRenderLocalView() {
-//        self.localSDKRenderView = localView
-        
-        let videoCanvas = AgoraRtcVideoCanvas()
-        videoCanvas.uid = 0
-        videoCanvas.renderMode = .hidden
-        videoCanvas.view = self.localSDKRenderView
-        agoraKit.setupLocalVideo(videoCanvas)
+    func SetupSelfCaptureRender() {
+        // Start native camera capture
+        customTrackId = agoraKit.createCustomVideoTrack()
+
+        customCameraCapture = AgoraCameraSourcePush(delegate: self, videoView: localCustomRenderView!)
+        customCameraCapture?.startCapture(ofCamera: .front)
     }
     
-    
-    func SetupAgoraRenderRemoteView(remoteUID: UInt, render: Bool) {
-//        self.remoteSDKRenderView = remoteView
-        
-        let videoCanvas = AgoraRtcVideoCanvas()
-        videoCanvas.uid = remoteUID
-        videoCanvas.renderMode = .hidden
-        videoCanvas.view = render ? self.remoteSDKRenderView : nil
-        agoraKit.setupRemoteVideo(videoCanvas)
-    }
-    
+//    func SetupAgoraRenderLocalView(render: Bool) {
+//        let videoCanvas = AgoraRtcVideoCanvas()
+//        videoCanvas.uid = 0
+//        videoCanvas.renderMode = .hidden
+//        videoCanvas.view = render ? self.localSDKRenderView : nil
+//        agoraKit.setupLocalVideo(videoCanvas)
+//    }
+//    
+//    
+//    func SetupAgoraRenderRemoteView(remoteUID: UInt, render: Bool) {
+//        let videoCanvas = AgoraRtcVideoCanvas()
+//        videoCanvas.uid = remoteUID
+//        videoCanvas.renderMode = .hidden
+//        videoCanvas.view = render ? self.remoteSDKRenderView : nil
+//        agoraKit.setupRemoteVideo(videoCanvas)
+//    }
+//    
     
 
     func TogglePIP() -> Bool {
@@ -86,7 +98,7 @@ class AgoraViewModel: NSObject, ObservableObject {
         videoCallController?.view.backgroundColor = .clear
         videoCallController?.modalPresentationStyle = .overFullScreen
         
-        if let videoCallController = videoCallController, let sourceView = remoteSDKRenderView {
+        if let videoCallController = videoCallController, let sourceView = localCustomRenderView {
 //        if let videoCallController = videoCallController, let sourceView = pipLocal ? localView : remoteView {
             pipController = AVPictureInPictureController(contentSource: .init(activeVideoCallSourceView: sourceView, contentViewController: videoCallController))
             pipController?.canStartPictureInPictureAutomaticallyFromInline = true
@@ -137,18 +149,17 @@ extension AgoraViewModel: AgoraRtcEngineDelegate {
 //extension AgoraViewModel: AgoraVideoFrameDelegate {
 //    // Raw videoframe from local user
 //    func onCapture(_ videoFrame: AgoraOutputVideoFrame, sourceType: AgoraVideoSourceType) -> Bool {
-//        if let localView = localCustomRenderView, let pixelBuffer = videoFrame.pixelBuffer {
-//            localView.renderVideoPixelBuffer(pixelBuffer: pixelBuffer, width: videoFrame.width, height: videoFrame.height)
-//        }
-//        
+////        if let localView = localCustomRenderView, let pixelBuffer = videoFrame.pixelBuffer {
+////            localView.renderVideoPixelBuffer(pixelBuffer: pixelBuffer, width: videoFrame.width, height: videoFrame.height)
+////        }
 //        return true
 //    }
 //
 //    // Raw videoframes from remote users
 //    func onRenderVideoFrame(_ videoFrame: AgoraOutputVideoFrame, uid: UInt, channelId: String) -> Bool {
-//        if let remoteView = remoteCustomRenderView, let pixelBuffer = videoFrame.pixelBuffer {
-//            remoteView.renderVideoPixelBuffer(pixelBuffer: pixelBuffer, width: videoFrame.width, height: videoFrame.height)
-//        }
+////        if let remoteView = remoteCustomRenderView, let pixelBuffer = videoFrame.pixelBuffer {
+////            remoteView.renderVideoPixelBuffer(pixelBuffer: pixelBuffer, width: videoFrame.width, height: videoFrame.height)
+////        }
 //        return true
 //    }
 //}
@@ -156,7 +167,7 @@ extension AgoraViewModel: AgoraRtcEngineDelegate {
 // MARK: APPLE PiP Delegate
 extension AgoraViewModel: AVPictureInPictureControllerDelegate {
     func pictureInPictureControllerWillStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
-        guard let vc = pictureInPictureController.contentSource?.activeVideoCallContentViewController, let pipSourceView = remoteSDKRenderView else { return }
+        guard let vc = pictureInPictureController.contentSource?.activeVideoCallContentViewController, let pipSourceView = localCustomRenderView else { return }
         
         vc.view.addSubview(pipSourceView)
         pipSourceView.frame = vc.view.bounds
@@ -164,21 +175,43 @@ extension AgoraViewModel: AVPictureInPictureControllerDelegate {
     }
     
     func pictureInPictureControllerDidStopPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
-        guard let pipSourceView = remoteSDKRenderView else { return }
+        guard let pipSourceView = localCustomRenderView else { return }
         
         pipSourceView.removeFromSuperview()
     }
     
     func pictureInPictureControllerDidStartPictureInPicture(_ pictureInPictureController: AVPictureInPictureController) {
-        
-        // When app enters background, SDK stops rendering automatically
-        // You need to stop the render, then resetup the rendering
-        if let remoteUID = remoteUIDs.first {
-            Task {
-                try? await Task.sleep(nanoseconds: 1_000_000_000) // 1 second delay
-                SetupAgoraRenderRemoteView(remoteUID: remoteUID, render: false) // stop render
-                SetupAgoraRenderRemoteView(remoteUID: remoteUID, render: true) // start render
-            }
-        }
+
     }
+}
+
+extension AgoraViewModel: AgoraCameraSourcePushDelegate {
+    // Callback to receive the custom video capture data
+    func myVideoCapture(_ capture: AgoraCameraSourcePush, didOutputSampleBuffer pixelBuffer: CVPixelBuffer, rotation: Int, timeStamp: CMTime) {
+        
+        // Convert custom video data to AgoraVideoFrame
+        let videoFrame = AgoraVideoFrame()
+        videoFrame.format = AgoraVideoFormat.cvPixelNV12.rawValue
+
+        // Push the AgoraVideoFrame to Agora Channel
+        videoFrame.textureBuf = pixelBuffer
+        videoFrame.rotation = Int32(rotation)
+        // once we have the video frame, we can push to agora sdk
+        let result = agoraKit.pushExternalVideoFrame(videoFrame, videoTrackId: UInt(customTrackId!))
+        print("Bac's pushExternal result \(result)")
+        
+//        let outputVideoFrame = AgoraOutputVideoFrame()
+//        outputVideoFrame.width = 720
+//        outputVideoFrame.height = 1280
+//        outputVideoFrame.pixelBuffer = pixelBuffer
+//        outputVideoFrame.rotation = Int32(rotation)
+//        localCustomRenderView?.renderFromVideoFrameData(videoData: outputVideoFrame)// Self render method
+        
+        // Render the custom video catpure data
+        localCustomRenderView?.renderVideoPixelBuffer(pixelBuffer: pixelBuffer, width: 400, height: 640)
+        
+        
+    }
+    
+    
 }

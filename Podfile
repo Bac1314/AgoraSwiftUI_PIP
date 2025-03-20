@@ -6,6 +6,6 @@ target 'AgoraSwiftUIPiP' do
   use_frameworks!
 
   # Pods for AgoraSwiftUIPiP
-  pod 'AgoraRtcEngine_iOS', '4.3.1'
+  pod 'AgoraRtcEngine_iOS', '4.5.0'
 
 end

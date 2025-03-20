@@ -11,11 +11,11 @@ import AVKit
 struct AgoraMainView: View {
     @StateObject var agoraVM : AgoraViewModel = AgoraViewModel()
     @State var channelName = ""
-//    var LocalUserRepresentView : PixelBufferRepresentable = PixelBufferRepresentable()
+    var LocalUserCustomRenderRepresentView : CustomPixelBufferRepresentable = CustomPixelBufferRepresentable()
 //    var RemoteUserRepresentView : PixelBufferRepresentable = PixelBufferRepresentable()
     
-    var LocalSDKRenderUIView: CustomUIVIew = CustomUIVIew() // Agora SDK to render this view
-    var RemoteSDKRenderUIView: CustomUIVIew = CustomUIVIew() // Agora SDK to render this view
+//    var LocalSDKRenderUIView: CustomUIVIew = CustomUIVIew() // Agora SDK to render this view
+//    var RemoteSDKRenderUIView: CustomUIVIew = CustomUIVIew() // Agora SDK to render this view
 
     
     var body: some View {
@@ -67,22 +67,28 @@ struct AgoraMainView: View {
         }else {
             // MARK: Show Local User View
             HStack {
-                LocalSDKRenderUIView
-                RemoteSDKRenderUIView
+                LocalUserCustomRenderRepresentView
+
+//                LocalSDKRenderUIView
+//                RemoteSDKRenderUIView
             }
             .frame(maxWidth: .infinity, maxHeight: 350)
             .padding()
             .onAppear {
-                agoraVM.localSDKRenderView = LocalSDKRenderUIView.videoView
-                agoraVM.remoteSDKRenderView = RemoteSDKRenderUIView.videoView
+                agoraVM.localCustomRenderView = LocalUserCustomRenderRepresentView.videoView
                 
-                agoraVM.SetupAgoraRenderLocalView() // Render local
+                // Set the self video capture
+                agoraVM.SetupSelfCaptureRender()
+                
+//                agoraVM.localSDKRenderView = LocalSDKRenderUIView.videoView
+//                agoraVM.remoteSDKRenderView = RemoteSDKRenderUIView.videoView
+//                agoraVM.SetupAgoraRenderLocalView(render: true) // Render local
             }
             .onChange(of: agoraVM.remoteUIDs) { oldValue, newValue in
-                // Render the first remote video streams
-                if let remoteUID = agoraVM.remoteUIDs.first {
-                    agoraVM.SetupAgoraRenderRemoteView(remoteUID: remoteUID, render: true)
-                }
+//                // Render the first remote video streams
+//                if let remoteUID = agoraVM.remoteUIDs.first {
+//                    agoraVM.SetupAgoraRenderRemoteView(remoteUID: remoteUID, render: true)
+//                }
             }
 
             
@@ -90,7 +96,7 @@ struct AgoraMainView: View {
                 Button {
                     let _ = agoraVM.TogglePIP()
                 } label: {
-                    Text("PiP Remote")
+                    Text("PiP Local")
                         .padding(8)
                         .foregroundStyle(.white)
                         .background(Color.pink)

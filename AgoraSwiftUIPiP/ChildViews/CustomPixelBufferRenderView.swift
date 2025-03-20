@@ -2,8 +2,6 @@
 //  PixelBufferRenderView.swift
 //  APIExample-SwiftUI
 //
-//  Created by qinhui on 2024/8/13.
-//
 
 import Foundation
 import SwiftUI
@@ -17,9 +15,9 @@ import AgoraRtcKit
  @struct     PixelBufferCustomRenderView
  @abstract   SwiftUI bridge view, rendering view
  */
-struct PixelBufferRepresentable: UIViewRepresentable, Identifiable {
+struct CustomPixelBufferRepresentable: UIViewRepresentable, Identifiable {
     let id = UUID()
-    let videoView = PixelBufferRenderView()
+    let videoView = CustomPixelBufferRenderView()
         
     func makeUIView(context: Context) -> UIView {
         videoView.backgroundColor = .red
@@ -35,7 +33,7 @@ struct PixelBufferRepresentable: UIViewRepresentable, Identifiable {
  @class      PixelBufferRenderView
  @abstract   Render view, support PixelBuffer, YUV
  */
-class PixelBufferRenderView: UIView {
+class CustomPixelBufferRenderView: UIView {
     var uid: UInt = 0
     private var videoWidth: Int32 = 0
     private var videoHeight: Int32 = 0

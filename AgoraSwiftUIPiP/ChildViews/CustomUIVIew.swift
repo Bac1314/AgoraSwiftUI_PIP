@@ -12,7 +12,6 @@ import AgoraRtcKit
 struct CustomUIVIew : UIViewRepresentable {
     let videoView = UIView()
 
-    
     func makeUIView(context: Context) -> some UIView {    
         videoView.backgroundColor = .blue
         return videoView

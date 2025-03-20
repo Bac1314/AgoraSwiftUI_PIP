@@ -12,9 +12,10 @@
 		295B1BB92C76DED400100CA0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 295B1BB82C76DED400100CA0 /* Assets.xcassets */; };
 		295B1BBC2C76DED400100CA0 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 295B1BBB2C76DED400100CA0 /* Preview Assets.xcassets */; };
 		295B1BC32C76DEE900100CA0 /* AgoraViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295B1BC22C76DEE900100CA0 /* AgoraViewModel.swift */; };
-		295B1BC52C76E46500100CA0 /* PixelBufferRenderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295B1BC42C76E46500100CA0 /* PixelBufferRenderView.swift */; };
+		295B1BC52C76E46500100CA0 /* CustomPixelBufferRenderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295B1BC42C76E46500100CA0 /* CustomPixelBufferRenderView.swift */; };
 		295B1BCD2C788A3700100CA0 /* CustomUIVIew.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295B1BCC2C788A3700100CA0 /* CustomUIVIew.swift */; };
 		41FFA6E91DD41359D7C2999C /* Pods_AgoraSwiftUIPiP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 434CE508556FC9763E577A24 /* Pods_AgoraSwiftUIPiP.framework */; };
+		B88C45412D7035B70048E36E /* AgoraCameraSourcePushDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B88C45402D7035B70048E36E /* AgoraCameraSourcePushDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,11 +25,12 @@
 		295B1BB82C76DED400100CA0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		295B1BBB2C76DED400100CA0 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		295B1BC22C76DEE900100CA0 /* AgoraViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgoraViewModel.swift; sourceTree = "<group>"; };
-		295B1BC42C76E46500100CA0 /* PixelBufferRenderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PixelBufferRenderView.swift; sourceTree = "<group>"; };
+		295B1BC42C76E46500100CA0 /* CustomPixelBufferRenderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomPixelBufferRenderView.swift; sourceTree = "<group>"; };
 		295B1BC62C76ECA200100CA0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		295B1BCC2C788A3700100CA0 /* CustomUIVIew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomUIVIew.swift; sourceTree = "<group>"; };
 		434CE508556FC9763E577A24 /* Pods_AgoraSwiftUIPiP.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AgoraSwiftUIPiP.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		64B4F9C5AB11D0975E6D4DF9 /* Pods-AgoraSwiftUIPiP.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraSwiftUIPiP.release.xcconfig"; path = "Target Support Files/Pods-AgoraSwiftUIPiP/Pods-AgoraSwiftUIPiP.release.xcconfig"; sourceTree = "<group>"; };
+		B88C45402D7035B70048E36E /* AgoraCameraSourcePushDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgoraCameraSourcePushDelegate.swift; sourceTree = "<group>"; };
 		C3D7168C9D689F3DBCEF7171 /* Pods-AgoraSwiftUIPiP.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraSwiftUIPiP.debug.xcconfig"; path = "Target Support Files/Pods-AgoraSwiftUIPiP/Pods-AgoraSwiftUIPiP.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -78,6 +80,7 @@
 				295B1BB42C76DED200100CA0 /* AgoraSwiftUIPiPApp.swift */,
 				295B1BB62C76DED200100CA0 /* AgoraMainView.swift */,
 				295B1BC22C76DEE900100CA0 /* AgoraViewModel.swift */,
+				B88C45402D7035B70048E36E /* AgoraCameraSourcePushDelegate.swift */,
 				295B1BC72C77138100100CA0 /* ChildViews */,
 				295B1BB82C76DED400100CA0 /* Assets.xcassets */,
 				295B1BBA2C76DED400100CA0 /* Preview Content */,
@@ -96,7 +99,7 @@
 		295B1BC72C77138100100CA0 /* ChildViews */ = {
 			isa = PBXGroup;
 			children = (
-				295B1BC42C76E46500100CA0 /* PixelBufferRenderView.swift */,
+				295B1BC42C76E46500100CA0 /* CustomPixelBufferRenderView.swift */,
 				295B1BCC2C788A3700100CA0 /* CustomUIVIew.swift */,
 			);
 			path = ChildViews;
@@ -226,9 +229,10 @@
 			files = (
 				295B1BB72C76DED200100CA0 /* AgoraMainView.swift in Sources */,
 				295B1BCD2C788A3700100CA0 /* CustomUIVIew.swift in Sources */,
-				295B1BC52C76E46500100CA0 /* PixelBufferRenderView.swift in Sources */,
+				295B1BC52C76E46500100CA0 /* CustomPixelBufferRenderView.swift in Sources */,
 				295B1BC32C76DEE900100CA0 /* AgoraViewModel.swift in Sources */,
 				295B1BB52C76DED200100CA0 /* AgoraSwiftUIPiPApp.swift in Sources */,
+				B88C45412D7035B70048E36E /* AgoraCameraSourcePushDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -360,6 +364,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"AgoraSwiftUIPiP/Preview Content\"";
@@ -380,8 +385,9 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = boldbrightstudio.AgoraSwiftUIPiP;
+				PRODUCT_BUNDLE_IDENTIFIER = boldbrightstudio.AgoraSwiftUIPiP2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -394,6 +400,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"AgoraSwiftUIPiP/Preview Content\"";
@@ -414,8 +421,9 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = boldbrightstudio.AgoraSwiftUIPiP;
+				PRODUCT_BUNDLE_IDENTIFIER = boldbrightstudio.AgoraSwiftUIPiP2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
